@@ -1,0 +1,278 @@
+:root {
+    --c-primary: #8b5cf6;
+    --c-primary-dark: #6d28d9;
+    --c-primary-light: #a78bfa;
+    --c-gray-900: #111827;
+    --c-gray-800: #1f2937;
+    --c-gray-700: #374151;
+    --c-gray-600: #4b5563;
+    --c-gray-400: #9ca3af;
+    --c-gray-200: #e5e7eb;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--c-gray-900);
+    color: var(--c-gray-200);
+}
+
+.font-display {
+    font-family: 'Teko', sans-serif;
+}
+
+.text-gradient {
+    background: linear-gradient(to right, var(--c-primary-light), var(--c-primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.tab-button {
+    transition: all 0.2s ease-in-out;
+    border-bottom: 3px solid transparent;
+    color: var(--c-gray-400);
+}
+
+.tab-button.active {
+    color: var(--c-primary-light);
+    border-bottom-color: var(--c-primary-light);
+}
+
+.tab-button.locked {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.content-section {
+    display: none;
+}
+
+.content-section.active {
+    display: block;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.workout-card {
+    transition: all 0.3s ease;
+}
+
+.workout-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px -5px rgba(139, 92, 246, 0.15);
+}
+
+.exercise-checkbox {
+    appearance: none;
+    background-color: var(--c-gray-700);
+    border: 2px solid var(--c-gray-600);
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.exercise-checkbox:checked {
+    background-color: var(--c-primary);
+    border-color: var(--c-primary-light);
+    transform: scale(1.1);
+}
+
+.exercise-checkbox:checked::after {
+    content: '✔';
+    color: white;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    font-size: 16px;
+}
+
+.exercise-label {
+    cursor: pointer;
+    flex-grow: 1;
+    transition: color 0.2s ease;
+}
+
+.exercise-checkbox:checked+.exercise-label {
+    color: var(--c-gray-400);
+    text-decoration: line-through;
+}
+
+.edit-input {
+    background-color: #374151;
+    border: 1px solid #4b5563;
+    border-radius: 6px;
+    padding: 4px 8px;
+    width: 100%;
+    color: white;
+}
+
+.progress-bar-container {
+    background-color: var(--c-gray-700);
+    border-radius: 99px;
+    height: 8px;
+    overflow: hidden;
+    transition: opacity 0.3s;
+}
+
+.progress-bar-fill {
+    background-image: linear-gradient(to right, var(--c-primary), var(--c-primary-light));
+    height: 100%;
+    width: 0%;
+    border-radius: 99px;
+    transition: width 0.5s ease-out;
+}
+
+.calendar-grid-class {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+}
+
+.calendar-day {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    background-color: var(--c-gray-800);
+    border-radius: 50%;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.calendar-day.other-month {
+    color: var(--c-gray-600);
+}
+
+.calendar-day.has-workout {
+    cursor: pointer;
+    border: 1px solid var(--c-primary-light);
+    font-weight: bold;
+}
+
+.calendar-day.has-workout:hover {
+    background-color: var(--c-primary-dark);
+}
+
+#calendar-tooltip {
+    display: none;
+    position: absolute;
+    background-color: var(--c-gray-900);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1000;
+    border: 1px solid var(--c-primary);
+    pointer-events: none;
+}
+
+.modal {
+    display: none;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.modal.active {
+    display: flex;
+    opacity: 1;
+    transform: scale(1);
+}
+
+#toast-container {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    z-index: 100;
+}
+
+.toast {
+    padding: 1rem 1.5rem;
+    margin-top: 0.5rem;
+    border-radius: 0.5rem;
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    animation: slideInUp 0.4s ease;
+}
+
+.toast.success {
+    background-image: linear-gradient(to right, #22c55e, #16a34a);
+}
+
+.toast.error {
+    background-image: linear-gradient(to right, #ef4444, #dc2626);
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-weight: bold;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.btn-primary {
+    background-image: linear-gradient(to right, var(--c-primary-dark), var(--c-primary));
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    box-shadow: 0 0 15px rgba(167, 139, 250, 0.4);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background-color: var(--c-gray-700);
+    color: white;
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background-color: var(--c-gray-600);
+}
+
+.btn-danger {
+    background-color: #dc2626;
+    color: white;
+}
+
+.btn-danger:hover:not(:disabled) {
+    background-color: #b91c1c;
+}
