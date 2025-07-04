@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function buildWorkoutDayCard(day) {
         const exercisesHTML = (day.exercises || []).map(ex => `<li class="flex items-center" data-exercise-id="${ex.id}"><input type="checkbox" id="${ex.id}" class="exercise-checkbox mr-4"><label for="${ex.id}" class="exercise-label">${ex.text}</label></li>`).join('');
-        return `<div class="workout-card bg-gray-800 p-6 rounded-xl shadow-lg" data-day-title="${day.title}" data-id-prefix="${day.idPrefix}"><div class="flex justify-between items-center mb-2"><div class="day-title-container flex-grow"><h3 class="text-2xl font-bold text-white">${day.title.replace(/\(Opcional\)/g, '<span class="text-base font-normal text-gray-400">(Opcional)</span>')}</h3></div><button class="edit-workout-btn p-2 rounded-full hover:bg-gray-700" title="Editar este treino">${ICONS.edit}</button></div><div class="normal-controls"><div class="progress-bar-container my-4 opacity-0"><div class="progress-bar-fill"></div></div><ul class="space-y-3 exercise-list">${exercisesHTML}</ul><hr class="border-gray-700 my-6"><div class="space-y-4 cardio-section"><h4 class="font-bold text-lg text-white flex items-center gap-2">${ICONS.heart} Cardio (Opcional)</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label for="cardio-type-${day.idPrefix}" class="block text-sm text-gray-400 mb-1">Tipo</label><select id="cardio-type-${day.idPrefix}" class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:ring-2 focus:ring-primary focus:border-primary"><option>Esteira</option><option>Bicicleta</option><option>Elíptico</option><option>Outro</option></select></div><div><label for="cardio-minutes-${day.idPrefix}" class="block text-sm text-gray-400 mb-1">Minutos</label><input type="number" id="cardio-minutes-${day.idPrefix}" class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:ring-2 focus:ring-primary focus:border-primary" placeholder="0"></div></div><div><p class="text-sm text-gray-400 mb-2">Dificuldade do Cardio</p><div class="difficulty-ratings flex justify-start space-x-4">${difficultyEmojis}</div></div></div><button class="finish-workout-btn btn btn-primary mt-8 w-full" disabled>${ICONS.flag} Finalizar Treino e Avaliar</button></div><div class="edit-controls hidden mt-4 space-y-2"><div class="day-title-container-edit mb-4"></div><ul class="space-y-3 exercise-list-edit"></ul><button class="add-exercise-btn btn btn-secondary w-full text-sm">${ICONS.plus} Adicionar Exercício</button><div class="flex space-x-2 mt-4"><button class="save-plan-changes-btn btn btn-primary w-full">${ICONS.save} Salvar Plano</button><button class="cancel-plan-changes-btn btn btn-secondary w-full">Cancelar</button></div><button class="delete-day-btn btn btn-danger w-full mt-2">${ICONS.trash} Excluir este Dia</button></div></div>`;
+        return `<div class="workout-card bg-gray-800 p-6 rounded-xl shadow-lg" data-day-title="${day.title}" data-id-prefix="${day.idPrefix}"><div class="flex justify-between items-center mb-2"><div class="day-title-container flex-grow"><h3 class="text-2xl font-bold text-white">${day.title.replace(/\(Opcional\)/g, '<span class="text-base font-normal text-gray-400">(Opcional)</span>')}</h3></div><button class="edit-workout-btn p-2 rounded-full hover:bg-gray-700" title="Editar este treino">${ICONS.edit}</button></div><div class="normal-controls"><div class="progress-bar-container my-4 opacity-0"><div class="progress-bar-fill"></div></div><ul class="space-y-3 exercise-list">${exercisesHTML}</ul><hr class="border-gray-700 my-6"><div class="space-y-4 cardio-section"><h4 class="font-bold text-lg text-white flex items-center gap-2">${ICONS.heart} Cardio (Opcional)</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label for="cardio-type-${day.idPrefix}" class="block text-sm text-gray-400 mb-1">Tipo</label><select id="cardio-type-${day.idPrefix}" class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:ring-2 focus:ring-primary focus:border-primary"><option>Esteira</option><option>Bicicleta</option><option>Elíptico</option><option>Outro</option></select></div><div><label for="cardio-minutes-${day.idPrefix}" class="block text-sm text-gray-400 mb-1">Minutos</label><input type="number" id="cardio-minutes-${day.idPrefix}" class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:ring-2 focus:ring-primary focus:border-primary" placeholder="0"></div></div></div><button class="finish-workout-btn btn btn-primary mt-8 w-full" disabled>${ICONS.flag} Finalizar Treino e Avaliar</button></div><div class="edit-controls hidden mt-4 space-y-2"><div class="day-title-container-edit mb-4"></div><ul class="space-y-3 exercise-list-edit"></ul><button class="add-exercise-btn btn btn-secondary w-full text-sm">${ICONS.plus} Adicionar Exercício</button><div class="flex space-x-2 mt-4"><button class="save-plan-changes-btn btn btn-primary w-full">${ICONS.save} Salvar Plano</button><button class="cancel-plan-changes-btn btn btn-secondary w-full">Cancelar</button></div><button class="delete-day-btn btn btn-danger w-full mt-2">${ICONS.trash} Excluir este Dia</button></div></div>`;
     }
 
     // --- EVENT HANDLERS & LOGIC ---
@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (activeModal.id === 'completion-modal' && e.target.closest('#save-workout-btn')) {
             const selectedDiff = activeModal.querySelector('.difficulty-btn.selected');
-            if (!selectedDiff) { showToast('Selecione um nível de dificuldade.', 'error'); return; }
+            if (!selectedDiff) { showToast('Selecione uma dificuldade para o treino.', 'error'); return; }
             const todayKey = getTodayKey(), log = workoutLog[todayKey];
             log.difficulty = parseInt(selectedDiff.dataset.value, 10);
             log.smartScore = calculateSmartScore(log);
@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function cancelPlanChanges(workoutCard) {
+    function cancelPlanChanges() {
         const activeTab = document.querySelector('.tab-button.active')?.dataset.tab || 'dashboard';
         reRenderAndSelectTab(activeTab);
     }
@@ -271,37 +271,41 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalExercises = originalPlanExercises.length;
         const completedCount = log.completedExercises?.length || 0;
         const baseScore = totalExercises > 0 ? (completedCount / totalExercises) * 10 : 0;
+        const completionRatio = totalExercises > 0 ? (completedCount / totalExercises) : 0;
         let difficultyMultiplier = 1.0;
         switch (log.difficulty) {
-            case 1: difficultyMultiplier = 0.85; break;
-            case 2: difficultyMultiplier = 0.95; break;
-            case 4: difficultyMultiplier = 1.05; break;
-            case 5: difficultyMultiplier = 1.10; break;
+            case 1: difficultyMultiplier = 0.80; break;
+            case 2: difficultyMultiplier = 0.92; break;
+            case 4: if (completionRatio >= 0.7) difficultyMultiplier = 1.04; break;
+            case 5: if (completionRatio >= 0.7) difficultyMultiplier = 1.08; break;
         }
         const adjustedScore = baseScore * difficultyMultiplier;
-        let cardioDelta = -0.5;
+        let cardioScoreComponent = -2.0;
         if (log.cardio && log.cardio.minutes > 0) {
-            cardioDelta = (log.cardio.minutes < 20) ? 0.5 : 1.0;
+            const mins = log.cardio.minutes;
+            if (mins >= 1 && mins < 20) { cardioScoreComponent = -1.5; } 
+            else if (mins >= 20 && mins <= 30) { cardioScoreComponent = 0.0; } 
+            else if (mins > 30) { cardioScoreComponent = 1.0; }
         }
-        const finalScore = adjustedScore + cardioDelta;
-        return Math.max(0, Math.min(10, finalScore));
+        const rawFinalScore = adjustedScore + cardioScoreComponent;
+        const allExercisesDone = completionRatio === 1 && totalExercises > 0;
+        const hardDifficulty = log.difficulty >= 4;
+        const goodCardioDone = log.cardio?.minutes >= 20;
+        const canGetTen = allExercisesDone && hardDifficulty && goodCardioDone;
+        let finalScore = canGetTen ? Math.min(rawFinalScore, 10) : Math.min(rawFinalScore, 9.9);
+        return Math.max(0, finalScore);
     }
 
     function finishWorkout(workoutCard) { const todayKey = getTodayKey(); if (workoutLog[todayKey]) { showConfirm("Sobrescrever Treino?", "Você já registrou um treino hoje. Deseja sobrescrevê-lo?", () => proceedWithFinish(workoutCard)); } else { proceedWithFinish(workoutCard); } }
     
     function proceedWithFinish(workoutCard) {
-        const todayKey = getTodayKey();
-        workoutLog[todayKey] = {};
-        const log = workoutLog[todayKey];
+        const todayKey = getTodayKey(); workoutLog[todayKey] = {}; const log = workoutLog[todayKey];
         log.phase = workoutCard.closest('[data-phase]').dataset.phase;
         log.dayTitle = workoutCard.dataset.dayTitle;
         log.completedExercises = Array.from(workoutCard.querySelectorAll('.exercise-checkbox:checked')).map(cb => cb.id);
         const idPrefix = workoutCard.dataset.idPrefix;
         const cardioMinutes = parseInt(document.getElementById(`cardio-minutes-${idPrefix}`).value, 10);
-        if (cardioMinutes > 0) {
-            const cardioType = document.getElementById(`cardio-type-${idPrefix}`).value;
-            const cardioDiffBtn = workoutCard.querySelector(`.cardio-section .difficulty-btn.selected`);
-            log.cardio = { type: cardioType, minutes: cardioMinutes, difficulty: cardioDiffBtn ? parseInt(cardioDiffBtn.dataset.value, 10) : 3 };
+        if (cardioMinutes > 0) { const cardioType = document.getElementById(`cardio-type-${idPrefix}`).value; log.cardio = { type: cardioType, minutes: cardioMinutes };
         } else { delete log.cardio; }
         saveLogState();
         const modal = document.getElementById('completion-modal');
@@ -321,8 +325,8 @@ document.addEventListener('DOMContentLoaded', () => {
         else { exContainer.innerHTML = '<p class="text-gray-500">Não foi possível carregar os exercícios (plano pode ter sido alterado).</p>'; }
         const diffContainer = document.getElementById('edit-modal-difficulty'); diffContainer.innerHTML = difficultyEmojis; if (log.difficulty) diffContainer.querySelector(`.difficulty-btn[data-value='${log.difficulty}']`)?.classList.add('selected');
         const cardioContainer = document.getElementById('edit-modal-cardio'); const cardio = log.cardio;
-        cardioContainer.innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label for="edit-cardio-type" class="block text-gray-300 mb-1 text-sm">Tipo</label><select id="edit-cardio-type" class="w-full p-2 rounded bg-gray-700 text-white"><option>Esteira</option><option>Bicicleta</option><option>Elíptico</option><option>Outro</option></select></div><div><label for="edit-cardio-minutes" class="block text-gray-300 mb-1 text-sm">Minutos</label><input type="number" id="edit-cardio-minutes" class="w-full p-2 rounded bg-gray-700 text-white" value="${cardio?.minutes || 0}"></div></div><div><p class="text-sm text-gray-400 mb-2">Dificuldade do Cardio</p><div class="difficulty-ratings flex justify-start space-x-4">${difficultyEmojis}</div></div>`;
-        if (cardio) { document.getElementById('edit-cardio-type').value = cardio.type || 'Esteira'; cardioContainer.querySelector(`.difficulty-ratings .difficulty-btn[data-value='${cardio.difficulty}']`)?.classList.add('selected'); }
+        cardioContainer.innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label for="edit-cardio-type" class="block text-gray-300 mb-1 text-sm">Tipo</label><select id="edit-cardio-type" class="w-full p-2 rounded bg-gray-700 text-white"><option>Esteira</option><option>Bicicleta</option><option>Elíptico</option><option>Outro</option></select></div><div><label for="edit-cardio-minutes" class="block text-gray-300 mb-1 text-sm">Minutos</label><input type="number" id="edit-cardio-minutes" class="w-full p-2 rounded bg-gray-700 text-white" value="${cardio?.minutes || 0}"></div></div>`;
+        if (cardio) { document.getElementById('edit-cardio-type').value = cardio.type || 'Esteira'; }
     }
 
     function saveEdits() {
@@ -333,7 +337,8 @@ document.addEventListener('DOMContentLoaded', () => {
         log.difficulty = parseInt(workoutDiffBtn.dataset.value, 10);
         log.completedExercises = Array.from(document.querySelectorAll('#edit-modal-exercises .exercise-checkbox:checked')).map(cb => cb.dataset.originalId);
         const cardioMins = parseInt(document.getElementById('edit-cardio-minutes')?.value || 0, 10);
-        if (cardioMins > 0) { const cardioDiffBtn = document.querySelector('#edit-modal-cardio .difficulty-ratings .difficulty-btn.selected'); log.cardio = { type: document.getElementById('edit-cardio-type')?.value, minutes: cardioMins, difficulty: cardioDiffBtn ? parseInt(cardioDiffBtn.dataset.value, 10) : null }; } else { delete log.cardio; }
+        if (cardioMins > 0) { log.cardio = { type: document.getElementById('edit-cardio-type')?.value, minutes: cardioMins }; } 
+        else { delete log.cardio; }
         log.smartScore = calculateSmartScore(log);
         saveLogState();
         closeAllModals();
@@ -392,7 +397,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const log = workoutLog[todayKey]; if (!log.dayTitle) return;
         const workoutCard = document.querySelector(`[data-day-title="${log.dayTitle}"]`); if (!workoutCard) return;
         if (log.completedExercises) { log.completedExercises.forEach(id => { const checkbox = document.getElementById(id); if (checkbox) checkbox.checked = true; }); }
-        if (log.cardio) { const idPrefix = workoutCard.dataset.idPrefix; document.getElementById(`cardio-type-${idPrefix}`).value = log.cardio.type || 'Esteira'; document.getElementById(`cardio-minutes-${idPrefix}`).value = log.cardio.minutes || 0; const diffBtn = workoutCard.querySelector(`.cardio-section .difficulty-btn[data-value='${log.cardio.difficulty}']`); if (diffBtn) diffBtn.classList.add('selected'); }
+        if (log.cardio) { const idPrefix = workoutCard.dataset.idPrefix; document.getElementById(`cardio-type-${idPrefix}`).value = log.cardio.type || 'Esteira'; document.getElementById(`cardio-minutes-${idPrefix}`).value = log.cardio.minutes || 0; }
         updateProgressBar(workoutCard);
         checkFinishButtonState(workoutCard);
     }
