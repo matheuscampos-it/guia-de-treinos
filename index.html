@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plano de Treino Interativo v8</title>
+    <title>Plano de Treino Interativo v10 (Corrigido)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,6 +34,7 @@
         .btn-danger:hover { background-color: #b91c1c; }
         .difficulty-btn { transition: transform 0.2s; }
         .difficulty-btn.selected { transform: scale(1.25); }
+        .edit-input { background-color: #374151; border: 1px solid #4b5563; border-radius: 6px; padding: 4px 8px; width: 100%; color: white; }
     </style>
 </head>
 <body class="antialiased">
@@ -41,7 +42,7 @@
     <div class="container mx-auto p-4 md:p-6 max-w-5xl">
         <header class="text-center mb-8">
             <h1 class="font-display text-5xl md:text-6xl font-bold text-white tracking-wide">PAINEL DE TREINO</h1>
-            <p class="text-lg text-gray-400 mt-1">Seu Guia de Treino Interativo de 6 Meses</p>
+            <p class="text-lg text-gray-400 mt-1">Seu Guia de Treino Interativo e Editável</p>
         </header>
 
         <nav class="mb-8 border-b border-gray-700">
@@ -97,10 +98,12 @@
 
     <script>
     // --- DATABASE ---
-    const workoutDatabase = { "A":{days:[{idPrefix:'a-d1',title:"Dia 1: Peito e Ombro",exercises:[{id:"a-d1-ex1",text:"<strong>Peck Deck (Voador):</strong> 4 séries de 10-12 reps"},{id:"a-d1-ex2",text:"<strong>Supino Inclinado c/ Halteres:</strong> 4 séries de 8-10 reps"},{id:"a-d1-ex3",text:"<strong>Supino Reto c/ Barra:</strong> 3 séries de 10 reps"},{id:"a-d1-ex4",text:"<strong>Desenv. de Ombros na Máquina:</strong> 3 séries de 10-12 reps"},{id:"a-d1-ex5",text:"<strong>Elevação Lateral c/ Halteres (sentado):</strong> 3 séries de 12-15 reps"},{id:"a-d1-ex6",text:"<strong>Face Pull na Polia:</strong> 4 séries de 15 reps"}]},{idPrefix:'a-d2',title:"Dia 2: Costas",exercises:[{id:"a-d2-ex1",text:"<strong>Lat Pulldown (Puxada Frontal):</strong> 4 séries de 10-12 reps"},{id:"a-d2-ex2",text:"<strong>Remada Curvada c/ Barra:</strong> 4 séries de 8-10 reps"},{id:"a-d2-ex3",text:"<strong>Remada Baixa (c/ Triângulo):</strong> 3 séries de 10-12 reps"},{id:"a-d2-ex4",text:"<strong>Puxada Unilateral na Polia:</strong> 3 séries de 12 reps/lado"},{id:"a-d2-ex5",text:"<strong>Pulldown com Corda na Polia Alta:</strong> 3 séries de 12 reps"}]},{idPrefix:'a-d3',title:"Dia 3: Pernas",exercises:[{id:"a-d3-ex1",text:"<strong>Agachamento no Hack Machine:</strong> 4 séries de 10-12 reps"},{id:"a-d3-ex2",text:"<strong>Leg Press 45°:</strong> 3 séries de 10 reps"},{id:"a-d3-ex3",text:"<strong>Cadeira Extensora:</strong> 3 séries de 12 reps"},{id:"a-d3-ex4",text:"<strong>Mesa Flexora:</strong> 3 séries de 10-12 reps"},{id:"a-d3-ex5",text:"<strong>Stiff com Halteres:</strong> 4 séries de 12 reps"},{id:"a-d3-ex6",text:"<strong>Panturrilha no Leg Press:</strong> 4 séries de 15-20 reps"}]},{idPrefix:'a-d4',title:"Dia 4: Braços e Abdômen",exercises:[{id:"a-d4-ex1",text:"<strong>BÍCEPS - Rosca Direta c/ Barra W:</strong> 3 séries de 10 reps"},{id:"a-d4-ex2",text:"<strong>BÍCEPS - Rosca Martelo c/ Halteres:</strong> 3 séries de 10 reps/braço"},{id:"a-d4-ex3",text:"<strong>BÍCEPS - Rosca Concentrada no Banco:</strong> 3 séries de 12 reps"},{id:"a-d4-ex4",text:"<strong>TRÍCEPS - Tríceps na Polia com Corda:</strong> 4 séries de 12 reps"},{id:"a-d4-ex5",text:"<strong>TRÍCEPS - Tríceps Testa c/ Halteres:</strong> 3 séries de 12 reps"},{id:"a-d4-ex6",text:"<strong>TRÍCEPS - Mergulho entre Bancos:</strong> 3 séries até a falha"},{id:"a-d4-ex7",text:"<strong>ANTEBRAÇO - Rosca Inversa c/ Barra:</strong> 3 séries de 15 reps"},{id:"a-d4-ex8",text:"<strong>ABDÔMEN - Prancha Isométrica:</strong> 3 séries até a falha"},{id:"a-d4-ex9",text:"<strong>ABDÔMEN - Elevação de Pernas:</strong> 3 séries de 15 reps"}]},{idPrefix:'a-d5',title:"Dia 5: Full Body (Opcional)",exercises:[{id:"a-d5-ex1",text:"<strong>Leg Press Horizontal:</strong> 3 séries de 12 reps"},{id:"a-d5-ex2",text:"<strong>Supino Reto com Halteres:</strong> 3 séries de 10 reps"},{id:"a-d5-ex3",text:"<strong>Remada na Máquina:</strong> 3 séries de 12 reps"},{id:"a-d5-ex4",text:"<strong>Elevação Lateral c/ Halteres:</strong> 3 séries de 15 reps"},{id:"a-d5-ex5",text:"<strong>Rosca Polia + Tríceps Polia (Bi-set):</strong> 3 séries de 12+12 reps"}]}]}, "B":{days:[{idPrefix:'b-d1',title:"Dia 1: Peito e Ombro",exercises:[{id:"b-d1-ex1",text:"<strong>Supino Reto c/ Halteres:</strong> 4 séries de 8-10-10-12 reps"},{id:"b-d1-ex2",text:"<strong>Peck Deck:</strong> 3x 10-12 reps + Drop Set na última"},{id:"b-d1-ex3",text:"<strong>Crucifixo Inclinado c/ Halteres:</strong> 3 séries de 12 reps"},{id:"b-d1-ex4",text:"<strong>Desenvolvimento Arnold:</strong> 3 séries de 10 reps"},{id:"b-d1-ex5",text:"<strong>Elevação Lateral na Polia:</strong> 3 séries de 12-15 reps"},{id:"b-d1-ex6",text:"<strong>Face Pull na Polia:</strong> 4 séries de 15 reps"}]},{idPrefix:'b-d2',title:"Dia 2: Costas",exercises:[{id:"b-d2-ex1",text:"<strong>Levantamento Terra ou Stiff:</strong> 4 séries de 8 reps"},{id:"b-d2-ex2",text:"<strong>Remada Curvada no Smith:</strong> 4 séries de 10 reps"},{id:"b-d2-ex3",text:"<strong>Puxada Frontal com Triângulo:</strong> 3 séries de 10-12 reps"},{id:"b-d2-ex4",text:"<strong>Remada na Máquina (pronada):</strong> 3 séries de 12 reps"},{id:"b-d2-ex5",text:"<strong>Pulldown com Barra Reta:</strong> 3 séries de 15 reps"}]},{idPrefix:'b-d3',title:"Dia 3: Pernas",exercises:[{id:"b-d3-ex1",text:"<strong>Leg Press 45°:</strong> 4 séries de 10-12 reps"},{id:"b-d3-ex2",text:"<strong>Agachamento Hack:</strong> 3 séries de 10 reps"},{id:"b-d3-ex3",text:"<strong>Cadeira Flexora:</strong> 3 séries de 12 reps"},{id:"b-d3-ex4",text:"<strong>Cadeira Extensora:</strong> 3 séries de 15 reps"},{id:"b-d3-ex5",text:"<strong>Cadeira Abdutora:</strong> 3 séries de 15 reps"},{id:"b-d3-ex6",text:"<strong>Panturrilha em Pé na Máquina:</strong> 4 séries de 15 reps"}]},{idPrefix:'b-d4',title:"Dia 4: Braços e Abdômen",exercises:[{id:"b-d4-ex1",text:"<strong>Rosca Scott na Máquina:</strong> 3 séries de 10-12 reps"},{id:"b-d4-ex2",text:"<strong>Rosca Inclinada c/ Halteres:</strong> 3 séries de 12 reps"},{id:"b-d4-ex3",text:"<strong>Tríceps na Polia com Barra Reta:</strong> 4 séries de 12 reps"},{id:"b-d4-ex4",text:"<strong>Tríceps Francês com Barra W:</strong> 3 séries de 10-12 reps"},{id:"b-d4-ex5",text:"<strong>Abdominal na Máquina ou Corda:</strong> 3 séries de 15 reps"},{id:"b-d4-ex6",text:"<strong>Prancha Lateral:</strong> 3 séries de 30-45s por lado"}]},{idPrefix:'b-d5',title:"Dia 5: Full Body (Opcional)",exercises:[{id:"b-d5-ex1",text:"<strong>Agachamento Hack:</strong> 3 séries de 12 reps"},{id:"b-d5-ex2",text:"<strong>Supino Inclinado com Halteres:</strong> 3 séries de 10 reps"},{id:"b-d5-ex3",text:"<strong>Remada Curvada com Halteres:</strong> 3 séries de 12 reps"},{id:"b-d5-ex4",text:"<strong>Desenvolvimento na Máquina:</strong> 3 séries de 12 reps"},{id:"b-d5-ex5",text:"<strong>Rosca Martelo + Tríceps Coice (Bi-set):</strong> 3 séries de 10+10 reps"}]}]}, "C":{days:[{idPrefix:'c-d1',title:"Dia 1: Peito e Tríceps",exercises:[{id:"c-d1-ex1",text:"<strong>Supino Inclinado c/ Barra:</strong> 4 séries de 10 reps"},{id:"c-d1-ex2",text:"<strong>Supino Reto c/ Halteres:</strong> 3 séries de 10-12 reps"},{id:"c-d1-ex3",text:"<strong>Peck Deck (Voador):</strong> 3 séries de 12 reps"},{id:"c-d1-ex4",text:"<strong>Tríceps Testa na Polia (deitado):</strong> 4 séries de 12 reps"},{id:"c-d1-ex5",text:"<strong>Tríceps Corda na Polia Alta:</strong> 3 séries de 12-15 reps"},{id:"c-d1-ex6",text:"<strong>Extensão Unilateral Invertida:</strong> 3 séries de 15 reps/braço"}]},{idPrefix:'c-d2',title:"Dia 2: Costas e Bíceps",exercises:[{id:"c-d2-ex1",text:"<strong>Levantamento Terra Romeno:</strong> 4 séries de 12 reps"},{id:"c-d2-ex2",text:"<strong>Remada Cavalinho ou Baixa:</strong> 4 séries de 10 reps"},{id:"c-d2-ex3",text:"<strong>Puxada Alta no Pulley:</strong> 3 séries de 12 reps"},{id:"c-d2-ex4",text:"<strong>Rosca Direta com Barra W:</strong> 4 séries de 10-12 reps"},{id:"c-d2-ex5",text:"<strong>Rosca Alternada com Halteres:</strong> 3 séries de 10 reps/braço"},{id:"c-d2-ex6",text:"<strong>Rosca Martelo com Corda na Polia:</strong> 3 séries de 12-15 reps"}]},{idPrefix:'c-d3',title:"Dia 3: Pernas",exercises:[{id:"c-d3-ex1",text:"<strong>Agachamento no Hack:</strong> 4 séries de 8-10 reps"},{id:"c-d3-ex2",text:"<strong>Leg Press Horizontal:</strong> 4 séries de 15 reps"},{id:"c-d3-ex3",text:"<strong>Cadeira Extensora (unilateral):</strong> 3 séries de 12 reps/perna"},{id:"c-d3-ex4",text:"<strong>Mesa Flexora (unilateral):</strong> 3 séries de 12 reps/perna"},{id:"c-d3-ex5",text:"<strong>Cadeira Adutora:</strong> 4 séries de 15 reps"},{id:"c-d3-ex6",text:"<strong>Panturrilha Sentado:</strong> 4 séries de 15-20 reps"}]},{idPrefix:'c-d4',title:"Dia 4: Ombros e Abdômen",exercises:[{id:"c-d4-ex1",text:"<strong>Desenvolvimento c/ Halteres:</strong> 4 séries de 10 reps"},{id:"c-d4-ex2",text:"<strong>Elev. Lateral + Frontal (Bi-set):</strong> 3 séries de 10+10 reps"},{id:"c-d4-ex3",text:"<strong>Crucifixo Inverso na Máquina:</strong> 4 séries de 15 reps"},{id:"c-d4-ex4",text:"<strong>Abdominal Canivete:</strong> 3 séries até a falha"},{id:"c-d4-ex5",text:"<strong>Rotação de Tronco na Polia:</strong> 3 séries de 15 reps/lado"}]},{idPrefix:'c-d5',title:"Dia 5: Full Body (Opcional)",exercises:[{id:"c-d5-ex1",text:"<strong>Cadeira Extensora + Mesa Flexora (Bi-set):</strong> 3 de 12+12 reps"},{id:"c-d5-ex2",text:"<strong>Supino Reto no Smith:</strong> 3 séries de 12 reps"},{id:"c-d5-ex3",text:"<strong>Lat Pulldown (pegada neutra):</strong> 3 séries de 12 reps"},{id:"c-d5-ex4",text:"<strong>Elevação Lateral na Máquina:</strong> 3 séries de 15 reps"},{id:"c-d5-ex5",text:"<strong>Abdominal na Máquina:</strong> 3 séries de 20 reps"}]}]}};
+    const defaultWorkoutDatabase = { "A":{days:[{idPrefix:'a-d1',title:"Dia 1: Peito e Ombro",exercises:[{id:"a-d1-ex1",text:"<strong>Peck Deck (Voador):</strong> 4 séries de 10-12 reps"},{id:"a-d1-ex2",text:"<strong>Supino Inclinado c/ Halteres:</strong> 4 séries de 8-10 reps"},{id:"a-d1-ex3",text:"<strong>Supino Reto c/ Barra:</strong> 3 séries de 10 reps"},{id:"a-d1-ex4",text:"<strong>Desenv. de Ombros na Máquina:</strong> 3 séries de 10-12 reps"},{id:"a-d1-ex5",text:"<strong>Elevação Lateral c/ Halteres (sentado):</strong> 3 séries de 12-15 reps"},{id:"a-d1-ex6",text:"<strong>Face Pull na Polia:</strong> 4 séries de 15 reps"}]},{idPrefix:'a-d2',title:"Dia 2: Costas",exercises:[{id:"a-d2-ex1",text:"<strong>Lat Pulldown (Puxada Frontal):</strong> 4 séries de 10-12 reps"},{id:"a-d2-ex2",text:"<strong>Remada Curvada c/ Barra:</strong> 4 séries de 8-10 reps"},{id:"a-d2-ex3",text:"<strong>Remada Baixa (c/ Triângulo):</strong> 3 séries de 10-12 reps"},{id:"a-d2-ex4",text:"<strong>Puxada Unilateral na Polia:</strong> 3 séries de 12 reps/lado"},{id:"a-d2-ex5",text:"<strong>Pulldown com Corda na Polia Alta:</strong> 3 séries de 12 reps"}]},{idPrefix:'a-d3',title:"Dia 3: Pernas",exercises:[{id:"a-d3-ex1",text:"<strong>Agachamento no Hack Machine:</strong> 4 séries de 10-12 reps"},{id:"a-d3-ex2",text:"<strong>Leg Press 45°:</strong> 3 séries de 10 reps"},{id:"a-d3-ex3",text:"<strong>Cadeira Extensora:</strong> 3 séries de 12 reps"},{id:"a-d3-ex4",text:"<strong>Mesa Flexora:</strong> 3 séries de 10-12 reps"},{id:"a-d3-ex5",text:"<strong>Stiff com Halteres:</strong> 4 séries de 12 reps"},{id:"a-d3-ex6",text:"<strong>Panturrilha no Leg Press:</strong> 4 séries de 15-20 reps"}]},{idPrefix:'a-d4',title:"Dia 4: Braços e Abdômen",exercises:[{id:"a-d4-ex1",text:"<strong>BÍCEPS - Rosca Direta c/ Barra W:</strong> 3 séries de 10 reps"},{id:"a-d4-ex2",text:"<strong>BÍCEPS - Rosca Martelo c/ Halteres:</strong> 3 séries de 10 reps/braço"},{id:"a-d4-ex3",text:"<strong>BÍCEPS - Rosca Concentrada no Banco:</strong> 3 séries de 12 reps"},{id:"a-d4-ex4",text:"<strong>TRÍCEPS - Tríceps na Polia com Corda:</strong> 4 séries de 12 reps"},{id:"a-d4-ex5",text:"<strong>TRÍCEPS - Tríceps Testa c/ Halteres:</strong> 3 séries de 12 reps"},{id:"a-d4-ex6",text:"<strong>TRÍCEPS - Mergulho entre Bancos:</strong> 3 séries até a falha"},{id:"a-d4-ex7",text:"<strong>ANTEBRAÇO - Rosca Inversa c/ Barra:</strong> 3 séries de 15 reps"},{id:"a-d4-ex8",text:"<strong>ABDÔMEN - Prancha Isométrica:</strong> 3 séries até a falha"},{id:"a-d4-ex9",text:"<strong>ABDÔMEN - Elevação de Pernas:</strong> 3 séries de 15 reps"}]},{idPrefix:'a-d5',title:"Dia 5: Full Body (Opcional)",exercises:[{id:"a-d5-ex1",text:"<strong>Leg Press Horizontal:</strong> 3 séries de 12 reps"},{id:"a-d5-ex2",text:"<strong>Supino Reto com Halteres:</strong> 3 séries de 10 reps"},{id:"a-d5-ex3",text:"<strong>Remada na Máquina:</strong> 3 séries de 12 reps"},{id:"a-d5-ex4",text:"<strong>Elevação Lateral c/ Halteres:</strong> 3 séries de 15 reps"},{id:"a-d5-ex5",text:"<strong>Rosca Polia + Tríceps Polia (Bi-set):</strong> 3 séries de 12+12 reps"}]}]}, "B":{days:[{idPrefix:'b-d1',title:"Dia 1: Peito e Ombro",exercises:[{id:"b-d1-ex1",text:"<strong>Supino Reto c/ Halteres:</strong> 4 séries de 8-10-10-12 reps"},{id:"b-d1-ex2",text:"<strong>Peck Deck:</strong> 3x 10-12 reps + Drop Set na última"},{id:"b-d1-ex3",text:"<strong>Crucifixo Inclinado c/ Halteres:</strong> 3 séries de 12 reps"},{id:"b-d1-ex4",text:"<strong>Desenvolvimento Arnold:</strong> 3 séries de 10 reps"},{id:"b-d1-ex5",text:"<strong>Elevação Lateral na Polia:</strong> 3 séries de 12-15 reps"},{id:"b-d1-ex6",text:"<strong>Face Pull na Polia:</strong> 4 séries de 15 reps"}]},{idPrefix:'b-d2',title:"Dia 2: Costas",exercises:[{id:"b-d2-ex1",text:"<strong>Levantamento Terra ou Stiff:</strong> 4 séries de 8 reps"},{id:"b-d2-ex2",text:"<strong>Remada Curvada no Smith:</strong> 4 séries de 10 reps"},{id:"b-d2-ex3",text:"<strong>Puxada Frontal com Triângulo:</strong> 3 séries de 10-12 reps"},{id:"b-d2-ex4",text:"<strong>Remada na Máquina (pronada):</strong> 3 séries de 12 reps"},{id:"b-d2-ex5",text:"<strong>Pulldown com Barra Reta:</strong> 3 séries de 15 reps"}]},{idPrefix:'b-d3',title:"Dia 3: Pernas",exercises:[{id:"b-d3-ex1",text:"<strong>Leg Press 45°:</strong> 4 séries de 10-12 reps"},{id:"b-d3-ex2",text:"<strong>Agachamento Hack:</strong> 3 séries de 10 reps"},{id:"b-d3-ex3",text:"<strong>Cadeira Flexora:</strong> 3 séries de 12 reps"},{id:"b-d3-ex4",text:"<strong>Cadeira Extensora:</strong> 3 séries de 15 reps"},{id:"b-d3-ex5",text:"<strong>Cadeira Abdutora:</strong> 3 séries de 15 reps"},{id:"b-d3-ex6",text:"<strong>Panturrilha em Pé na Máquina:</strong> 4 séries de 15 reps"}]},{idPrefix:'b-d4',title:"Dia 4: Braços e Abdômen",exercises:[{id:"b-d4-ex1",text:"<strong>Rosca Scott na Máquina:</strong> 3 séries de 10-12 reps"},{id:"b-d4-ex2",text:"<strong>Rosca Inclinada c/ Halteres:</strong> 3 séries de 12 reps"},{id:"b-d4-ex3",text:"<strong>Tríceps na Polia com Barra Reta:</strong> 4 séries de 12 reps"},{id:"b-d4-ex4",text:"<strong>Tríceps Francês com Barra W:</strong> 3 séries de 10-12 reps"},{id:"b-d4-ex5",text:"<strong>Abdominal na Máquina ou Corda:</strong> 3 séries de 15 reps"},{id:"b-d4-ex6",text:"<strong>Prancha Lateral:</strong> 3 séries de 30-45s por lado"}]},{idPrefix:'b-d5',title:"Dia 5: Full Body (Opcional)",exercises:[{id:"b-d5-ex1",text:"<strong>Agachamento Hack:</strong> 3 séries de 12 reps"},{id:"b-d5-ex2",text:"<strong>Supino Inclinado com Halteres:</strong> 3 séries de 10 reps"},{id:"b-d5-ex3",text:"<strong>Remada Curvada com Halteres:</strong> 3 séries de 12 reps"},{id:"b-d5-ex4",text:"<strong>Desenvolvimento na Máquina:</strong> 3 séries de 12 reps"},{id:"b-d5-ex5",text:"<strong>Rosca Martelo + Tríceps Coice (Bi-set):</strong> 3 séries de 10+10 reps"}]}]}, "C":{days:[{idPrefix:'c-d1',title:"Dia 1: Peito e Tríceps",exercises:[{id:"c-d1-ex1",text:"<strong>Supino Inclinado c/ Barra:</strong> 4 séries de 10 reps"},{id:"c-d1-ex2",text:"<strong>Supino Reto c/ Halteres:</strong> 3 séries de 10-12 reps"},{id:"c-d1-ex3",text:"<strong>Peck Deck (Voador):</strong> 3 séries de 12 reps"},{id:"c-d1-ex4",text:"<strong>Tríceps Testa na Polia (deitado):</strong> 4 séries de 12 reps"},{id:"c-d1-ex5",text:"<strong>Tríceps Corda na Polia Alta:</strong> 3 séries de 12-15 reps"},{id:"c-d1-ex6",text:"<strong>Extensão Unilateral Invertida:</strong> 3 séries de 15 reps/braço"}]},{idPrefix:'c-d2',title:"Dia 2: Costas e Bíceps",exercises:[{id:"c-d2-ex1",text:"<strong>Levantamento Terra Romeno:</strong> 4 séries de 12 reps"},{id:"c-d2-ex2",text:"<strong>Remada Cavalinho ou Baixa:</strong> 4 séries de 10 reps"},{id:"c-d2-ex3",text:"<strong>Puxada Alta no Pulley:</strong> 3 séries de 12 reps"},{id:"c-d2-ex4",text:"<strong>Rosca Direta com Barra W:</strong> 4 séries de 10-12 reps"},{id:"c-d2-ex5",text:"<strong>Rosca Alternada com Halteres:</strong> 3 séries de 10 reps/braço"},{id:"c-d2-ex6",text:"<strong>Rosca Martelo com Corda na Polia:</strong> 3 séries de 12-15 reps"}]},{idPrefix:'c-d3',title:"Dia 3: Pernas",exercises:[{id:"c-d3-ex1",text:"<strong>Agachamento no Hack:</strong> 4 séries de 8-10 reps"},{id:"c-d3-ex2",text:"<strong>Leg Press Horizontal:</strong> 4 séries de 15 reps"},{id:"c-d3-ex3",text:"<strong>Cadeira Extensora (unilateral):</strong> 3 séries de 12 reps/perna"},{id:"c-d3-ex4",text:"<strong>Mesa Flexora (unilateral):</strong> 3 séries de 12 reps/perna"},{id:"c-d3-ex5",text:"<strong>Cadeira Adutora:</strong> 4 séries de 15 reps"},{id:"c-d3-ex6",text:"<strong>Panturrilha Sentado:</strong> 4 séries de 15-20 reps"}]},{idPrefix:'c-d4',title:"Dia 4: Ombros e Abdômen",exercises:[{id:"c-d4-ex1",text:"<strong>Desenvolvimento c/ Halteres:</strong> 4 séries de 10 reps"},{id:"c-d4-ex2",text:"<strong>Elev. Lateral + Frontal (Bi-set):</strong> 3 séries de 10+10 reps"},{id:"c-d4-ex3",text:"<strong>Crucifixo Inverso na Máquina:</strong> 4 séries de 15 reps"},{id:"c-d4-ex4",text:"<strong>Abdominal Canivete:</strong> 3 séries até a falha"},{id:"c-d4-ex5",text:"<strong>Rotação de Tronco na Polia:</strong> 3 séries de 15 reps/lado"}]},{idPrefix:'c-d5',title:"Dia 5: Full Body (Opcional)",exercises:[{id:"c-d5-ex1",text:"<strong>Cadeira Extensora + Mesa Flexora (Bi-set):</strong> 3 de 12+12 reps"},{id:"c-d5-ex2",text:"<strong>Supino Reto no Smith:</strong> 3 séries de 12 reps"},{id:"c-d5-ex3",text:"<strong>Lat Pulldown (pegada neutra):</strong> 3 séries de 12 reps"},{id:"c-d5-ex4",text:"<strong>Elevação Lateral na Máquina:</strong> 3 séries de 15 reps"},{id:"c-d5-ex5",text:"<strong>Abdominal na Máquina:</strong> 3 séries de 20 reps"}]}]}};
 
     document.addEventListener('DOMContentLoaded', () => {
+        // --- STATE AND GLOBAL VARS ---
         let workoutLog = JSON.parse(localStorage.getItem('workoutLog')) || {};
+        let userWorkoutPlan = {};
         const getTodayKey = () => new Date().toISOString().split('T')[0];
         let currentCalendarDate = new Date();
         let activeModal = null;
@@ -110,27 +113,14 @@
         const difficultyEmojis = `<button data-value="1" title="Muito Fácil" class="difficulty-btn text-4xl">😊</button><button data-value="2" title="Fácil" class="difficulty-btn text-4xl">🙂</button><button data-value="3" title="Moderado" class="difficulty-btn text-4xl">😐</button><button data-value="4" title="Difícil" class="difficulty-btn text-4xl">😟</button><button data-value="5" title="Exaustivo" class="difficulty-btn text-4xl">🥵</button>`;
         const phaseAccessRules = { 'fase-a': [7, 8], 'fase-b': [9, 10], 'fase-c': [11, 12] };
         
-        function saveState() { localStorage.setItem('workoutLog', JSON.stringify(workoutLog)); }
-        function openModal(modalId) {
-            closeAllModals();
-            activeModal = document.getElementById(modalId);
-            if (activeModal) activeModal.classList.add('active');
-        }
-        function closeAllModals() {
-            document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
-            activeModal = null;
-        }
-        function getWeekRange(date) {
-            const start = new Date(date.getTime());
-            const day = start.getDay() || 7;
-            if (day !== 1) start.setHours(-24 * (day - 1));
-            start.setHours(0, 0, 0, 0);
-            const end = new Date(start.getTime());
-            end.setDate(end.getDate() + 6);
-            end.setHours(23, 59, 59, 999);
-            return { start, end };
-        }
+        // --- UTILS ---
+        function saveWorkoutPlan() { localStorage.setItem('userWorkoutPlan', JSON.stringify(userWorkoutPlan)); }
+        function saveLogState() { localStorage.setItem('workoutLog', JSON.stringify(workoutLog)); }
+        function openModal(modalId) { closeAllModals(); activeModal = document.getElementById(modalId); if (activeModal) activeModal.classList.add('active'); }
+        function closeAllModals() { document.querySelectorAll('.modal').forEach(m => m.classList.remove('active')); activeModal = null; }
+        function getWeekRange(date) { const start = new Date(date.getTime()); const day = start.getDay() || 7; if (day !== 1) start.setHours(-24 * (day - 1)); start.setHours(0, 0, 0, 0); const end = new Date(start.getTime()); end.setDate(end.getDate() + 6); end.setHours(23, 59, 59, 999); return { start, end }; }
 
+        // --- DYNAMIC CONTENT BUILDERS ---
         function buildLayout() {
             let html = `
             <section id="dashboard" class="content-section active">
@@ -144,15 +134,22 @@
                 </div>
             </section>`;
             
-            Object.keys(workoutDatabase).forEach(phaseKey => {
-                const phaseData = workoutDatabase[phaseKey];
+            Object.keys(userWorkoutPlan).forEach(phaseKey => {
+                const phaseData = userWorkoutPlan[phaseKey];
                 html += `<section id="fase-${phaseKey.toLowerCase()}" class="content-section" data-phase="${phaseKey}"><div class="space-y-6">`;
                 phaseData.days.forEach(day => {
                     html += `<div class="bg-gray-800 p-6 rounded-xl shadow-lg" data-day-title="${day.title}" data-id-prefix="${day.idPrefix}">
-                        <h3 class="text-2xl font-bold mb-4 text-white">${day.title.replace(/\(Opcional\)/g, '<span class="text-base font-normal text-gray-400">(Opcional)</span>')}</h3>
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-2xl font-bold text-white">${day.title.replace(/\(Opcional\)/g, '<span class="text-base font-normal text-gray-400">(Opcional)</span>')}</h3>
+                            <button class="edit-workout-btn p-2 rounded-full hover:bg-gray-700" title="Editar este treino"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 pointer-events-none" viewBox="0 0 20 20" fill="currentColor"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" /></svg></button>
+                        </div>
                         <ul class="space-y-3 exercise-list">`;
-                    day.exercises.forEach(ex => { html += `<li class="flex items-center"><input type="checkbox" id="${ex.id}" class="exercise-checkbox mr-4"><label for="${ex.id}" class="exercise-label">${ex.text}</label></li>`; });
+                    day.exercises.forEach(ex => { html += `<li class="flex items-center" data-exercise-id="${ex.id}"><input type="checkbox" id="${ex.id}" class="exercise-checkbox mr-4"><label for="${ex.id}" class="exercise-label">${ex.text}</label></li>`; });
                     html += `</ul>
+                        <div class="edit-controls hidden mt-4 space-y-2">
+                           <button class="add-exercise-btn w-full text-sm py-2 px-4 rounded-lg bg-indigo-600 hover:bg-indigo-700">+ Adicionar Exercício</button>
+                           <div class="flex space-x-2"><button class="save-plan-changes-btn w-full py-2 px-4 rounded-lg bg-green-600 hover:bg-green-700">Salvar Plano</button><button class="cancel-plan-changes-btn w-full py-2 px-4 rounded-lg bg-gray-600 hover:bg-gray-700">Cancelar</button></div>
+                        </div>
                         <hr class="border-gray-600 my-6">
                         <div class="space-y-4 cardio-section">
                             <h4 class="font-bold text-lg text-white">Cardio (Opcional)</h4>
@@ -174,19 +171,15 @@
 
         // --- EVENT HANDLERS ---
         function setupEventListeners() {
-            document.querySelectorAll('.tab-button').forEach(tab => tab.addEventListener('click', handleTabClick));
+            document.querySelector('nav').addEventListener('click', handleTabClick);
             mainEl.addEventListener('click', handleMainClick);
             document.body.addEventListener('click', handleModalAndDifficultyClicks);
         }
 
         function handleTabClick(e) {
-            const tabEl = e.target.closest('.tab-button');
-            if (!tabEl) return;
+            const tabEl = e.target.closest('.tab-button'); if (!tabEl) return;
             const tabId = tabEl.getAttribute('data-tab');
-            if (tabEl.classList.contains('locked')) {
-                alert('Este treino ainda não está liberado! Foco na fase atual.');
-                return;
-            }
+            if (tabEl.classList.contains('locked')) { alert('Este treino ainda não está liberado! Foco na fase atual.'); return; }
             document.querySelectorAll('.tab-button').forEach(t => t.classList.remove('active'));
             tabEl.classList.add('active');
             document.querySelectorAll('.content-section').forEach(content => content.classList.remove('active'));
@@ -196,16 +189,16 @@
         }
         
         function handleMainClick(e) {
-            if (e.target.matches('.finish-workout-btn')) {
-                finishWorkout(e.target.closest('.bg-gray-800[data-day-title]'));
-            } else if (e.target.closest('.calendar-day.has-workout')) {
-                editLogKey = e.target.closest('.calendar-day.has-workout').dataset.logKey;
-                openModal('edit-modal');
-                populateEditModal(editLogKey);
-            } else if (e.target.closest('.difficulty-ratings')) {
-                const btn = e.target.closest('.difficulty-btn');
-                if (btn) handleDifficultySelection(btn);
-            }
+            const target = e.target;
+            const editBtn = target.closest('.edit-workout-btn');
+            if (editBtn) { toggleEditMode(editBtn.closest('.bg-gray-800')); return; }
+            if (target.closest('.save-plan-changes-btn')) { savePlanChanges(target.closest('.bg-gray-800')); }
+            else if (target.closest('.cancel-plan-changes-btn')) { cancelPlanChanges(target.closest('.bg-gray-800')); }
+            else if (target.closest('.add-exercise-btn')) { addExerciseRow(target.closest('.bg-gray-800')); }
+            else if (target.closest('.delete-exercise-btn')) { target.closest('li').remove(); }
+            else if (target.matches('.finish-workout-btn')) { finishWorkout(target.closest('.bg-gray-800[data-day-title]')); }
+            else if (target.closest('.calendar-day.has-workout')) { editLogKey = target.closest('.calendar-day.has-workout').dataset.logKey; openModal('edit-modal'); populateEditModal(editLogKey); }
+            else if (target.closest('.difficulty-ratings')) { const btn = target.closest('.difficulty-btn'); if (btn) handleDifficultySelection(btn); }
         }
 
         function handleModalAndDifficultyClicks(e) {
@@ -216,29 +209,23 @@
             if(difficultyBtn) {
                 handleDifficultySelection(difficultyBtn);
                 if (activeModal.id === 'completion-modal') {
-                    const todayKey = getTodayKey();
-                    const tempLog = { ...workoutLog[todayKey] };
-                    tempLog.difficulty = parseInt(difficultyBtn.dataset.value);
+                    const tempLog = workoutLog[getTodayKey()];
+                    tempLog.difficulty = parseInt(difficultyBtn.dataset.value, 10);
                     const workoutCard = document.querySelector(`[data-day-title="${tempLog.dayTitle}"]`);
                     const score = calculateSmartScore(tempLog, workoutCard);
-                    document.getElementById('modal-score').textContent = score.toFixed(1);
-                    document.getElementById('modal-score-placeholder').style.display = 'none';
-                    document.getElementById('modal-score').style.display = 'block';
+                    const scoreEl = document.getElementById('modal-score'), placeholderEl = document.getElementById('modal-score-placeholder');
+                    if(scoreEl && placeholderEl){ scoreEl.textContent = score.toFixed(1); placeholderEl.style.display = 'none'; scoreEl.style.display = 'block'; }
                 }
             }
 
             if (activeModal.id === 'completion-modal' && e.target.matches('#save-workout-btn')) {
                 const selectedDiff = activeModal.querySelector('.difficulty-btn.selected');
-                if (!selectedDiff) {
-                    alert('Por favor, selecione um nível de dificuldade para o treino.');
-                    return;
-                }
-                const todayKey = getTodayKey();
-                const log = workoutLog[todayKey];
-                log.difficulty = parseInt(selectedDiff.dataset.value);
+                if (!selectedDiff) { alert('Por favor, selecione um nível de dificuldade para o treino.'); return; }
+                const todayKey = getTodayKey(), log = workoutLog[todayKey];
+                log.difficulty = parseInt(selectedDiff.dataset.value, 10);
                 const workoutCard = document.querySelector(`[data-day-title="${log.dayTitle}"]`);
                 log.smartScore = calculateSmartScore(log, workoutCard);
-                saveState();
+                saveLogState();
                 alert(`Treino salvo! Sua nota final foi: ${log.smartScore.toFixed(1)}`);
                 closeAllModals();
                 renderDashboard();
@@ -248,264 +235,166 @@
             }
         }
         
-        function handleDifficultySelection(button) {
-             button.parentElement.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('selected'));
-             button.classList.add('selected');
-        }
-
-        // --- CORE LOGIC ---
+        function handleDifficultySelection(button) { button.parentElement.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('selected')); button.classList.add('selected'); }
+        
         function calculateSmartScore(log, workoutCard) {
             if (!log || !workoutCard) return 0;
             const checkboxes = workoutCard.querySelectorAll('.exercise-list .exercise-checkbox');
             const completedCount = log.completedExercises?.length || 0;
             const baseScore = checkboxes.length > 0 ? (completedCount / checkboxes.length) * 10 : 0;
-            
             let difficultyDelta = 0;
             const diff = log.difficulty;
-            if (diff === 1) difficultyDelta = -1.0;
-            if (diff === 2) difficultyDelta = -0.5;
-            if (diff === 4) difficultyDelta = 0.75;
-            if (diff === 5) difficultyDelta = 1.25;
-            
+            if (diff === 1) difficultyDelta = -1.0; else if (diff === 2) difficultyDelta = -0.5; else if (diff === 4) difficultyDelta = 0.75; else if (diff === 5) difficultyDelta = 1.25;
             let cardioDelta = 0;
             const cardio = log.cardio;
-            if (!cardio || cardio.minutes <= 0) {
-                cardioDelta = -1.0;
-            } else if (cardio.minutes < 20) {
-                cardioDelta = 0.5;
-            } else {
-                cardioDelta = 1.5;
-            }
-
+            if (!cardio || cardio.minutes <= 0) cardioDelta = -1.0; else if (cardio.minutes < 20) cardioDelta = 0.5; else cardioDelta = 1.5;
             const finalScore = baseScore + difficultyDelta + cardioDelta;
             return Math.max(0, Math.min(10, finalScore));
         }
 
         function finishWorkout(workoutCard) {
+            const allCheckboxes = workoutCard.querySelectorAll('.exercise-list .exercise-checkbox');
+            const completedCheckboxes = workoutCard.querySelectorAll('.exercise-list .exercise-checkbox:checked');
+            if (allCheckboxes.length > 0 && (completedCheckboxes.length / allCheckboxes.length) < 0.5) { alert('Você precisa completar pelo menos 50% dos exercícios para registrar o treino!'); return; }
+            
             const todayKey = getTodayKey();
             if (!workoutLog[todayKey]) workoutLog[todayKey] = {};
             const log = workoutLog[todayKey];
-
-            log.phase = workoutCard.closest('[data-phase]').dataset.phase;
-            log.dayTitle = workoutCard.dataset.dayTitle;
-            
-            const exercisesInCard = workoutCard.querySelectorAll('.exercise-list .exercise-checkbox');
-            const completedInCard = workoutCard.querySelectorAll('.exercise-list .exercise-checkbox:checked');
-
-            const totalExercises = exercisesInCard.length;
-            const completedCount = completedInCard.length;
-            
-            if (totalExercises > 0 && (completedCount / totalExercises) < 0.5) {
-                const required = Math.ceil(totalExercises / 2);
-                alert(`Você precisa completar pelo menos 50% dos exercícios (${required} de ${totalExercises}) para registrar o treino. Atualmente: ${completedCount}.`);
-                return;
-            }
-            log.completedExercises = Array.from(completedInCard).map(cb => cb.id);
-
-            const idPrefix = workoutCard.dataset.idPrefix;
-            const cardioMinutes = parseInt(document.getElementById(`cardio-minutes-${idPrefix}`).value, 10);
+            log.phase = workoutCard.closest('[data-phase]').dataset.phase; log.dayTitle = workoutCard.dataset.dayTitle;
+            log.completedExercises = Array.from(completedCheckboxes).map(cb => cb.id);
+            const idPrefix = workoutCard.dataset.idPrefix, cardioMinutes = parseInt(document.getElementById(`cardio-minutes-${idPrefix}`).value, 10);
             if(cardioMinutes > 0) {
-                const cardioType = document.getElementById(`cardio-type-${idPrefix}`).value;
-                const cardioDiffBtn = workoutCard.querySelector(`.cardio-section .difficulty-btn.selected`);
-                log.cardio = { type: cardioType, minutes: cardioMinutes, difficulty: cardioDiffBtn ? parseInt(cardioDiffBtn.dataset.value) : null };
-            } else {
-                delete log.cardio;
-            }
-            saveState();
+                const cardioType = document.getElementById(`cardio-type-${idPrefix}`).value, cardioDiffBtn = workoutCard.querySelector(`.cardio-section .difficulty-btn.selected`);
+                log.cardio = { type: cardioType, minutes: cardioMinutes, difficulty: cardioDiffBtn ? parseInt(cardioDiffBtn.dataset.value, 10) : null };
+            } else { delete log.cardio; }
+            saveLogState();
             
             const modal = document.getElementById('completion-modal');
             modal.querySelector('.difficulty-ratings').innerHTML = difficultyEmojis;
-            const scorePlaceholder = modal.querySelector('#modal-score-placeholder');
-            const scoreDisplay = modal.querySelector('#modal-score');
-            scoreDisplay.textContent = '';
-            scoreDisplay.style.display = 'none';
-            scorePlaceholder.style.display = 'block';
+            const scoreEl = modal.querySelector('#modal-score'), placeholderEl = modal.querySelector('#modal-score-placeholder');
+            scoreEl.style.display = 'none'; placeholderEl.style.display = 'block';
             openModal('completion-modal');
         }
-
-        // --- EDIT/DELETE LOGIC ---
+        
+        // --- PLAN EDITING LOGIC ---
+        function toggleEditMode(workoutCard, forceOff = false) {
+            const isEditing = workoutCard.classList.contains('editing');
+            const list = workoutCard.querySelector('.exercise-list');
+            if (isEditing || forceOff) { // Turn OFF
+                workoutCard.classList.remove('editing');
+                const phaseKey = workoutCard.closest('[data-phase]').dataset.phase, dayTitle = workoutCard.dataset.dayTitle;
+                const dayData = userWorkoutPlan[phaseKey].days.find(d => d.title === dayTitle);
+                list.innerHTML = dayData.exercises.map(ex => `<li class="flex items-center" data-exercise-id="${ex.id}"><input type="checkbox" id="${ex.id}" class="exercise-checkbox mr-4"><label for="${ex.id}" class="exercise-label">${ex.text}</label></li>`).join('');
+                workoutCard.querySelector('.edit-controls').classList.add('hidden');
+                workoutCard.querySelector('.edit-workout-btn').classList.remove('hidden');
+            } else { // Turn ON
+                workoutCard.classList.add('editing');
+                workoutCard.querySelectorAll('.exercise-list li').forEach(li => {
+                    const label = li.querySelector('label');
+                    const [name, series] = label.innerHTML.split(/:(.*)/s).map(s => s.replace(/<\/?strong>/g, '').trim());
+                    label.innerHTML = `<div class="flex items-center gap-2">
+                        <input type="text" class="edit-input flex-grow" value="${name}">
+                        <input type="text" class="edit-input w-2/3" value="${series}">
+                        <button class="delete-exercise-btn p-1 text-red-500 hover:text-red-400 text-2xl font-bold">&times;</button>
+                    </div>`;
+                });
+                workoutCard.querySelector('.edit-controls').classList.remove('hidden');
+                workoutCard.querySelector('.edit-workout-btn').classList.add('hidden');
+            }
+        }
+        function addExerciseRow(workoutCard) { const list = workoutCard.querySelector('.exercise-list'), newId = `ex-${Date.now()}`, li = document.createElement('li'); li.className = "flex items-center"; li.dataset.exerciseId = newId; li.innerHTML = `<div class="exercise-checkbox mr-4 bg-gray-600"></div><div class="flex-grow flex items-center gap-2"><input type="text" class="edit-input flex-grow" placeholder="Nome do Exercício"><input type="text" class="edit-input w-2/3" placeholder="Séries e Reps"><button class="delete-exercise-btn p-1 text-red-500 hover:text-red-400 text-2xl font-bold">&times;</button></div>`; list.appendChild(li); }
+        function savePlanChanges(workoutCard) {
+            const phaseKey = workoutCard.closest('[data-phase]').dataset.phase, dayTitle = workoutCard.dataset.dayTitle;
+            const dayIndex = userWorkoutPlan[phaseKey].days.findIndex(d => d.title === dayTitle); if(dayIndex === -1) return;
+            const newExercises = [];
+            workoutCard.querySelectorAll('.exercise-list li').forEach(li => {
+                const id = li.dataset.exerciseId, inputs = li.querySelectorAll('input.edit-input'), name = inputs[0].value, series = inputs[1].value;
+                if(name && series) newExercises.push({ id, text: `<strong>${name}:</strong> ${series}` });
+            });
+            userWorkoutPlan[phaseKey].days[dayIndex].exercises = newExercises;
+            saveWorkoutPlan(); toggleEditMode(workoutCard, true);
+        }
+        function cancelPlanChanges(workoutCard) { toggleEditMode(workoutCard, true); }
+        
+        // --- LOG EDIT/DELETE LOGIC ---
         function populateEditModal(logKey) {
-            const log = workoutLog[logKey];
-            if (!log) return;
-            
+            const log = workoutLog[logKey]; if (!log) return;
             document.getElementById('edit-modal-title').textContent = `Editando: ${new Date(logKey + 'T00:00:00').toLocaleDateString('pt-BR')}`;
             document.getElementById('edit-modal-score').textContent = log.smartScore?.toFixed(1) || "-";
-            
-            const exContainer = document.getElementById('edit-modal-exercises');
+            const exContainer = document.getElementById('edit-modal-exercises'), phase = userWorkoutPlan[log.phase], day = phase?.days.find(d => d.title === log.dayTitle);
             exContainer.innerHTML = '';
-            const phase = workoutDatabase[log.phase];
-            const day = phase?.days.find(d => d.title === log.dayTitle);
-            if(day) {
-                const list = document.createElement('ul'); list.className = 'space-y-3';
-                day.exercises.forEach(ex => {
-                    const isChecked = log.completedExercises?.includes(ex.id);
-                    list.innerHTML += `<li class="flex items-center"><input type="checkbox" id="edit-${ex.id}" data-original-id="${ex.id}" class="exercise-checkbox mr-4" ${isChecked ? 'checked' : ''}><label for="edit-${ex.id}" class="exercise-label">${ex.text}</label></li>`;
-                });
-                exContainer.appendChild(list);
-            } else {
-                 exContainer.innerHTML = '<p class="text-gray-500">Não foi possível carregar a lista de exercícios.</p>';
-            }
-
-            const diffContainer = document.getElementById('edit-modal-difficulty');
-            diffContainer.innerHTML = difficultyEmojis;
+            if(day) { const list = document.createElement('ul'); list.className = 'space-y-3'; day.exercises.forEach(ex => { const isChecked = log.completedExercises?.includes(ex.id); list.innerHTML += `<li class="flex items-center"><input type="checkbox" id="edit-${ex.id}" data-original-id="${ex.id}" class="exercise-checkbox mr-4" ${isChecked ? 'checked' : ''}><label for="edit-${ex.id}" class="exercise-label">${ex.text}</label></li>`; }); exContainer.appendChild(list); } 
+            else { exContainer.innerHTML = '<p class="text-gray-500">Não foi possível carregar a lista de exercícios.</p>'; }
+            const diffContainer = document.getElementById('edit-modal-difficulty'); diffContainer.innerHTML = difficultyEmojis;
             if(log.difficulty) diffContainer.querySelector(`.difficulty-btn[data-value='${log.difficulty}']`)?.classList.add('selected');
-
-            const cardioContainer = document.getElementById('edit-modal-cardio');
-            const cardio = log.cardio;
+            const cardioContainer = document.getElementById('edit-modal-cardio'), cardio = log.cardio;
             cardioContainer.innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label for="edit-cardio-type" class="block text-gray-300 mb-1 text-sm">Tipo</label><select id="edit-cardio-type" class="w-full p-2 rounded bg-gray-700 text-white"><option>Esteira</option><option>Bicicleta</option><option>Elíptico</option><option>Outro</option></select></div><div><label for="edit-cardio-minutes" class="block text-gray-300 mb-1 text-sm">Minutos</label><input type="number" id="edit-cardio-minutes" class="w-full p-2 rounded bg-gray-700 text-white" value="${cardio?.minutes || 0}"></div></div><div><p class="text-sm text-gray-400 mb-2">Dificuldade do Cardio</p><div class="difficulty-ratings flex justify-start space-x-4">${difficultyEmojis}</div></div>`;
-            if(cardio) {
-                document.getElementById('edit-cardio-type').value = cardio.type || 'Esteira';
-                cardioContainer.querySelector(`.difficulty-ratings .difficulty-btn[data-value='${cardio.difficulty}']`)?.classList.add('selected');
-            }
+            if(cardio) { document.getElementById('edit-cardio-type').value = cardio.type || 'Esteira'; cardioContainer.querySelector(`.difficulty-ratings .difficulty-btn[data-value='${cardio.difficulty}']`)?.classList.add('selected'); }
         }
-        
         function saveEdits() {
             if(!editLogKey || !workoutLog[editLogKey]) return;
-            const log = workoutLog[editLogKey];
-
-            const workoutDiffBtn = document.querySelector('#edit-modal-difficulty .difficulty-btn.selected');
-            if(!workoutDiffBtn) {
-                alert('Por favor, selecione uma dificuldade para o treino.');
-                return;
-            }
-            log.difficulty = parseInt(workoutDiffBtn.dataset.value);
-
+            const log = workoutLog[editLogKey], workoutDiffBtn = document.querySelector('#edit-modal-difficulty .difficulty-btn.selected');
+            if(!workoutDiffBtn) { alert('Por favor, selecione uma dificuldade para o treino.'); return; }
+            log.difficulty = parseInt(workoutDiffBtn.dataset.value, 10);
             log.completedExercises = Array.from(document.querySelectorAll('#edit-modal-exercises .exercise-checkbox:checked')).map(cb => cb.dataset.originalId);
-            
-            const cardioMins = parseInt(document.getElementById('edit-cardio-minutes')?.value || 0);
-            if (cardioMins > 0) {
-                const cardioDiffBtn = document.querySelector('#edit-modal-cardio .difficulty-ratings .difficulty-btn.selected');
-                log.cardio = { type: document.getElementById('edit-cardio-type')?.value, minutes: cardioMins, difficulty: cardioDiffBtn ? parseInt(cardioDiffBtn.dataset.value) : null };
-            } else {
-                delete log.cardio;
-            }
-            
-            const phase = workoutDatabase[log.phase];
-            const day = phase?.days.find(d => d.title === log.dayTitle);
+            const cardioMins = parseInt(document.getElementById('edit-cardio-minutes')?.value || 0, 10);
+            if (cardioMins > 0) { const cardioDiffBtn = document.querySelector('#edit-modal-cardio .difficulty-ratings .difficulty-btn.selected'); log.cardio = { type: document.getElementById('edit-cardio-type')?.value, minutes: cardioMins, difficulty: cardioDiffBtn ? parseInt(cardioDiffBtn.dataset.value, 10) : null }; } else { delete log.cardio; }
+            const phase = userWorkoutPlan[log.phase], day = phase?.days.find(d => d.title === log.dayTitle);
             const workoutCardMock = document.createElement('div');
-            if (day) {
-                const list = document.createElement('ul');
-                day.exercises.forEach(ex => list.innerHTML += `<li><input class="exercise-checkbox"></li>`);
-                workoutCardMock.appendChild(list);
-            }
+            if (day) { const list = document.createElement('ul'); day.exercises.forEach(() => list.innerHTML += `<li><input class="exercise-checkbox"></li>`); workoutCardMock.querySelector('.exercise-list').innerHTML = list.innerHTML }
             log.smartScore = calculateSmartScore(log, workoutCardMock);
-
-            saveState();
-            closeAllModals();
-            renderCalendar(currentCalendarDate);
-            renderDashboard();
+            saveLogState(); closeAllModals(); renderCalendar(currentCalendarDate); renderDashboard();
         }
-
-        function deleteLog() {
-            if(editLogKey && confirm(`Tem certeza que deseja excluir o registro do dia ${new Date(editLogKey + 'T00:00:00').toLocaleDateString('pt-BR')}?`)) {
-                delete workoutLog[editLogKey];
-                saveState();
-                closeAllModals();
-                renderCalendar(currentCalendarDate);
-                renderDashboard();
-            }
-        }
+        function deleteLog() { if(editLogKey && confirm(`Tem certeza que deseja excluir o registro do dia ${new Date(editLogKey + 'T00:00:00').toLocaleDateString('pt-BR')}?`)) { delete workoutLog[editLogKey]; saveLogState(); closeAllModals(); renderCalendar(currentCalendarDate); renderDashboard(); } }
 
         function renderDashboard() {
-            const today = new Date();
-            const currentMonthStr = today.toISOString().slice(0, 7);
-            const weekRange = getWeekRange(today);
-            const logs = Object.entries(workoutLog);
-
+            const today = new Date(), currentMonthStr = today.toISOString().slice(0, 7), weekRange = getWeekRange(today), logs = Object.entries(workoutLog);
             const thisMonthLogs = logs.filter(([key]) => key.startsWith(currentMonthStr));
-            const thisWeekLogs = logs.filter(([key]) => {
-                const logDate = new Date(key + 'T00:00:00');
-                return logDate >= weekRange.start && logDate <= weekRange.end;
-            });
-            
+            const thisWeekLogs = logs.filter(([key]) => { const logDate = new Date(key + 'T00:00:00'); return logDate >= weekRange.start && logDate <= weekRange.end; });
             document.getElementById('stat-days-trained').textContent = thisMonthLogs.length;
-
             const calcAvgScore = (arr) => arr.length > 0 ? (arr.reduce((sum, [, log]) => sum + (log.smartScore || 0), 0) / arr.length).toFixed(1) : "-";
             document.getElementById('stat-avg-score-month').textContent = calcAvgScore(thisMonthLogs);
             document.getElementById('stat-avg-score-week').textContent = calcAvgScore(thisWeekLogs);
-            
-            const cardioMinutes = thisMonthLogs.reduce((sum, [, log]) => sum + (log.cardio?.minutes || 0), 0);
-            document.getElementById('stat-cardio-minutes').textContent = cardioMinutes;
-
-            const getMostFrequent = (arr) => {
-                if (arr.length === 0) return "-";
-                const counts = arr.reduce((acc, val) => { acc[val] = (acc[val] || 0) + 1; return acc; }, {});
-                return Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
-            };
+            document.getElementById('stat-cardio-minutes').textContent = thisMonthLogs.reduce((sum, [, log]) => sum + (log.cardio?.minutes || 0), 0);
+            const getMostFrequent = (arr) => { if (arr.length === 0) return "-"; const counts = arr.reduce((acc, val) => { acc[val] = (acc[val] || 0) + 1; return acc; }, {}); return Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b); };
             document.getElementById('stat-fav-cardio').textContent = getMostFrequent(logs.map(([, log]) => log.cardio?.type).filter(Boolean));
             document.getElementById('stat-fav-workout').textContent = getMostFrequent(logs.map(([, log]) => log.dayTitle).filter(Boolean));
         }
 
         function renderCalendar(date) {
-            const calendarGrid = document.getElementById('calendar-grid');
-            if(!calendarGrid) return;
+            const calendarGrid = document.getElementById('calendar-grid'); if(!calendarGrid) return;
             calendarGrid.innerHTML = '';
-            const year = date.getFullYear();
-            const month = date.getMonth();
+            const year = date.getFullYear(), month = date.getMonth();
             document.getElementById('calendar-title').textContent = `${date.toLocaleString('pt-BR', { month: 'long' }).replace(/^\w/, c => c.toUpperCase())} ${year}`;
-            const firstDayOfMonth = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-
+            const firstDayOfMonth = new Date(year, month, 1).getDay(), daysInMonth = new Date(year, month + 1, 0).getDate();
             for (let i = 0; i < firstDayOfMonth; i++) { calendarGrid.innerHTML += `<div class="calendar-day other-month"></div>`; }
             for (let day = 1; day <= daysInMonth; day++) {
                 const dayKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                const dayDiv = document.createElement('div');
-                dayDiv.className = 'calendar-day';
-                dayDiv.textContent = day;
-                if (workoutLog[dayKey]) {
-                    dayDiv.classList.add('has-workout');
-                    dayDiv.dataset.logKey = dayKey;
-                }
+                const dayDiv = document.createElement('div'); dayDiv.className = 'calendar-day'; dayDiv.textContent = day;
+                if (workoutLog[dayKey]) { dayDiv.classList.add('has-workout'); dayDiv.dataset.logKey = dayKey; }
                 calendarGrid.appendChild(dayDiv);
             }
         }
         
-        function lockWorkoutPhases() {
-            const currentMonth = new Date().getMonth() + 1;
-            document.querySelectorAll('.tab-button[data-tab^="fase-"]').forEach(tab => {
-                const tabId = tab.dataset.tab;
-                if (phaseAccessRules[tabId] && !phaseAccessRules[tabId].includes(currentMonth)) {
-                    tab.classList.add('locked');
-                }
-            });
-        }
+        function lockWorkoutPhases() { const currentMonth = new Date().getMonth() + 1; document.querySelectorAll('.tab-button[data-tab^="fase-"]').forEach(tab => { const tabId = tab.dataset.tab; if (phaseAccessRules[tabId] && !phaseAccessRules[tabId].includes(currentMonth)) tab.classList.add('locked'); }); }
         
         function init() {
-            buildLayout();
-            setupEventListeners();
-            lockWorkoutPhases();
-            loadInitialState();
-            renderDashboard();
-            
-            document.querySelector('body').addEventListener('click', e => {
-                const calendarGrid = document.getElementById('calendar-grid');
-                if (calendarGrid?.contains(e.target)) return;
-                if(e.target.id === 'prev-month') { currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1); renderCalendar(currentCalendarDate); }
-                if(e.target.id === 'next-month') { currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1); renderCalendar(currentCalendarDate); }
-            });
+            const savedPlan = localStorage.getItem('userWorkoutPlan');
+            userWorkoutPlan = savedPlan ? JSON.parse(savedPlan) : JSON.parse(JSON.stringify(defaultWorkoutDatabase));
+            buildLayout(); setupEventListeners(); lockWorkoutPhases(); loadInitialState(); renderDashboard();
+            document.querySelector('body').addEventListener('click', e => { const calendarGrid = document.getElementById('calendar-grid'); if (calendarGrid?.contains(e.target)) return; if(e.target.id === 'prev-month') { currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1); renderCalendar(currentCalendarDate); } if(e.target.id === 'next-month') { currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1); renderCalendar(currentCalendarDate); } });
         }
 
         function loadInitialState() {
-            const todayKey = getTodayKey();
-            if (!workoutLog[todayKey]) return;
-            const log = workoutLog[todayKey];
-
-            const workoutCard = document.querySelector(`[data-day-title="${log.dayTitle}"]`);
-            if (!workoutCard) return;
-
-            if (log.completedExercises) {
-                workoutCard.querySelectorAll('.exercise-list .exercise-checkbox').forEach(cb => {
-                    if (log.completedExercises.includes(cb.id)) {
-                        cb.checked = true;
-                    }
-                });
-            }
+            const todayKey = getTodayKey(); if (!workoutLog[todayKey]) return;
+            const log = workoutLog[todayKey]; if (!log.dayTitle) return;
+            const workoutCard = document.querySelector(`[data-day-title="${log.dayTitle}"]`); if (!workoutCard) return;
+            if (log.completedExercises) { log.completedExercises.forEach(id => { const checkbox = document.getElementById(id); if (checkbox) checkbox.checked = true; }); }
             if(log.cardio) {
                 const idPrefix = workoutCard.dataset.idPrefix;
                 document.getElementById(`cardio-type-${idPrefix}`).value = log.cardio.type || 'Esteira';
                 document.getElementById(`cardio-minutes-${idPrefix}`).value = log.cardio.minutes || 0;
-                const diffBtn = workoutCard.querySelector(`.cardio-section .difficulty-btn[data-value='${log.cardio.difficulty}']`);
-                if(diffBtn) diffBtn.classList.add('selected');
+                const diffBtn = workoutCard.querySelector(`.cardio-section .difficulty-btn[data-value='${log.cardio.difficulty}']`); if(diffBtn) diffBtn.classList.add('selected');
             }
         }
 
